@@ -14,16 +14,17 @@ To write a YACC program to recognize a valid variable which starts with a letter
 6.	Compile the yacc program with YACC compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
 7.	Compile these with the C compiler as gcc lex.yy.c y.tab.c
 8.	Enter a statement as input and the valid variables are identified as output.
-# PROGRAM
-```
-// variable_test.l file
+# PROGRAM:
+FLEX FILE:
+````````
 %{
 #include "y.tab.h"
 %}
 
 %%
 
-"int" { return INT; } "float" { return FLOAT; }
+"int" { return INT; } 
+"float" { return FLOAT; }
 "double" { return DOUBLE; }
 
 [a-zA-Z][a-zA-Z0-9]* {
@@ -32,40 +33,66 @@ printf("\nIdentifier is %s", yytext); return ID;
 
 . { return yytext[0]; }
 
-\n { return '\\n'; }
+\n { return 0; }
 
 %%
 
-int yywrap() { return 1;
+int yywrap() 
+{ 
+return 1;
 }
+``````````
 
-
-// variable_test.y file
-
+``````````
 %{
-#include <stdio.h>
-/* This YACC program is for recognizing the Expression */
+
+#include<stdio.h>
+/* This YACC program is for recognising the Expression*/
+
 %}
-
 %token ID INT FLOAT DOUBLE
-%% D: T L;
 
-L: L ',' ID   | ID;
+%% D: T L
+;
 
-T: INT | FLOAT | DOUBLE;
+L: L ID
+
+| ID
+
+;
+
+T: INT
+
+| FLOAT
+
+| DOUBLE
+
+;
 
 %%
-extern FILE *yyin; int main() {
-do {
-yyparse();
-} while (!feof(yyin)); return 0;
-}
 
-void yyerror(char *s) { fprintf(stderr, "Error: %s\n", s);
+extern FILE*yyin; main()
+{
+
+do
+
+{
+
+yyparse();
+}while(!feof(yyin));
+
 }
-```
-# Output
-![image](https://github.com/user-attachments/assets/76c0de41-90cc-47cc-a30f-76f9b5d8bba4)
+yyerror(char*s)
+{
+
+}
+ 
+
+````````````
+
+
+# Output:
+![image](https://github.com/user-attachments/assets/ed32a046-87c4-4d9e-82f9-206301b9ee2d)
 
 # Result
 A YACC program to recognize a valid variable which starts with a letter followed by any number of letters or digits is executed successfully and the output is verified.
